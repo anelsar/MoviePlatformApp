@@ -5,9 +5,9 @@
 
 <div class="container-fluid p-5">
     <div class="row">
-        <div class="col-md-6 mx-auto">
+        <div class="col-md-8 mx-auto">
             <div class="card shadow">
-                <div class="card-body mx-auto">
+                <div class="card-body mx-auto col-8">
                     @using (Html.BeginForm("Create", "Movie", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
                     {
                         @Html.AntiForgeryToken()
@@ -22,8 +22,37 @@
                         </div>
                         <div class="form-group">
                             <div class="col-md-12">
-                                @Html.TextBoxFor(m => m.Description, new { @class = "form-control col", placeholder = "Movie description" })
+                                @Html.TextAreaFor(m => m.Description, new { @class = "form-control col", placeholder = "Movie description" })
                                 @Html.ValidationMessageFor(m => m.Description, "", new { @class = "text-danger small" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                @Html.TextBoxFor(m => m.Duration, new { @type = "number", @class = "form-control col", placeholder = "Movie duration (min.)" })
+                                @Html.ValidationMessageFor(m => m.Duration, "", new { @class = "text-danger small" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                @Html.TextBoxFor(m => m.Rating, new { @type = "number", @class = "form-control col", placeholder = "Movie rating" })
+                                @Html.ValidationMessageFor(m => m.Rating, "", new { @class = "text-danger small" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                @Html.TextAreaFor(m => m.Actors, new { @class = "form-control col", placeholder = "Actors" })
+                                @Html.ValidationMessageFor(m => m.Actors, "", new { @class = "text-danger small" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                @Html.TextBoxFor(m => m.StreamingLink, new { @class = "form-control col", placeholder = "Streaming link" })
+                                @Html.ValidationMessageFor(m => m.StreamingLink, "", new { @class = "text-danger small" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col">
+                                <input type="submit" value="Create" class="btn btn-default col btn-success" />
                             </div>
                         </div>
                     }

@@ -19,7 +19,9 @@ namespace APP.Controllers
 
         public ActionResult Index()
         {
-            return View();
+            var allMovies = _movies.GetMovies();
+            
+            return View("Index" ,allMovies);
         }
 
         public ActionResult Create()
@@ -32,6 +34,7 @@ namespace APP.Controllers
         {
             return View();
         }
+        
         
     }
 }

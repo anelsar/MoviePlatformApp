@@ -1,0 +1,30 @@
+﻿@model APP.Models.AddRoleToUserViewModel
+@{
+    ViewBag.Title = "AddRoleToUser";
+}
+
+<div class="container-fluid p-5">
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+            <div class="card shadow">
+                <div class="card-body mx-auto">
+                    <h4 class="text-center">Add role to @Model.singleUser.Name</h4>
+                    <hr />
+                    <table>
+                        @foreach (var item in Model.roles)
+                        {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+
+                            </td>
+                        </tr>
+                        }
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
