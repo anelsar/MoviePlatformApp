@@ -11,10 +11,14 @@
                      Hello @User.Identity.GetUserName()
                 </a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                    @Html.ActionLink("Role management", "Index", "Role", new { area = "" }, new { @class = "dropdown-item" })
+                    @if (User.IsInRole("Admin"))
+                    {
+                        @Html.ActionLink("Role management", "Index", "Role", new { area = "" }, new { @class = "dropdown-item" })
+                        @Html.ActionLink("Movie management", "Index", "Movie", new { area = "" }, new { @class = "dropdown-item" })
+                        @Html.ActionLink("User management", "ManageUsers", "Admin", new { area = "" }, new { @class = "dropdown-item" })
+                    }
                     @Html.ActionLink("Profile management", "Index", "Manage", new { area = "" }, new { @class = "dropdown-item" })
-                    @Html.ActionLink("Movie management", "Index", "Movie", new { area = "" }, new { @class = "dropdown-item" })
-                    @Html.ActionLink("User management", "Index", "Movie", new { area = "" }, new { @class = "dropdown-item" })
+
                     <a class="text-muted dropdown-item" href="javascript:document.getElementById('logoutForm').submit()">
                         Log off
                     </a>

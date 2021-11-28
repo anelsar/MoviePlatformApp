@@ -39,7 +39,7 @@ namespace APP.Controllers
                 _signInManager = value; 
             }
         }
-
+       
         public ApplicationUserManager UserManager
         {
             get
