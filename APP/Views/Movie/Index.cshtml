@@ -8,20 +8,42 @@
         <div class="col-md-6 mx-auto">
             <div class="card shadow">
                 <div class="card-body mx-auto">
-                    <h4>Movie settings</h4>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">@Html.ActionLink("Add new movie", "Create", "Movie", new { area = "" }, new { @class = "" })</li>
-                        <li class="list-group-item">@Html.ActionLink("See all movies", "Index", "Role", new { area = "" }, new { @class = "" })</li>
-                    </ul>
-                    @foreach (var item in Model)
+                    <h4 class="text-center py-3">Movie settings</h4>
+                    @if (TempData["Success"] != null)
                     {
-                        <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.MovieName)
-                            </td>
-                            
-                        </tr>
+                        <p class="alert alert-success" id="successMessage">@TempData["Success"]</p>
                     }
+                    <div class="row">
+                        <div class="col mx-auto">
+
+                            <p>
+                                @Html.ActionLink("Add a new movie", "Create", "Movie", new { area = "" }, new { @class = "btn btn-info col" })
+                            </p>
+                        </div>
+                    </div>
+                    <table class="table">
+                        <tr>
+                            <th>
+                                Movies
+                            </th>
+                            <th></th>
+                        </tr>
+
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.MovieName)
+                                </td>
+                                <td>
+                                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                                </td>
+                            </tr>
+                        }
+
+                    </table>
                 </div>
             </div>
         </div>
