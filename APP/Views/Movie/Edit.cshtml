@@ -1,0 +1,101 @@
+﻿@model APP.Models.Movie
+@{
+    ViewBag.Title = "Edit";
+}
+
+<div class="container-fluid pt-5">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card shadow">
+                <div class="card-body mx-auto">
+
+                    <h4 class="text-center">Edit info about <i>@Model.MovieName</i> movie</h4>
+                    <hr />
+                    @using (Html.BeginForm( new { @class = "form-horizontal"}))
+                    {
+                        @Html.AntiForgeryToken()
+
+                <div class="form-horizontal">
+
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @Html.HiddenFor(model => model.Id)
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+
+                                <div class="col">
+                                    @Html.LabelFor(model => model.MovieName, "Name", new { @class = "FieldLabel small" })
+                                    @Html.EditorFor(model => model.MovieName, new { htmlAttributes = new { @class = "form-control col" } })
+                                    @Html.ValidationMessageFor(model => model.MovieName, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+
+                                <div class="col-12">
+                                    @Html.LabelFor(model => model.MovieActors, "Actors", new { @class = "FieldLabel small" })
+                                    @Html.TextAreaFor(model => model.MovieActors, new { @class = "form-control col" })
+                                    @Html.ValidationMessageFor(model => model.MovieActors, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+
+                                <div class="col">
+                                    @Html.LabelFor(model => model.MovieDuration, "Duration (mins.)", new { @class = "FieldLabel small" })
+                                    @Html.EditorFor(model => model.MovieDuration, new { htmlAttributes = new { @class = "form-control col" } })
+                                    @Html.ValidationMessageFor(model => model.MovieDuration, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+
+                                <div class="col">
+                                    @Html.LabelFor(model => model.MovieRating, "Rating", new { @class = "FieldLabel small" })
+                                    @Html.EditorFor(model => model.MovieRating, new { htmlAttributes = new { @class = "form-control col" } })
+                                    @Html.ValidationMessageFor(model => model.MovieRating, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+
+                                <div class="col">
+                                    @Html.LabelFor(model => model.MovieStreamingLink, "Streaming link", new { @class = "FieldLabel small" })
+                                    @Html.EditorFor(model => model.MovieStreamingLink, new { htmlAttributes = new { @class = "form-control col" } })
+                                    @Html.ValidationMessageFor(model => model.MovieStreamingLink, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <div class="col-12 text-center">
+                                    <img class="card-img img-fluid" src="~/Images/@Model.MovieImagePath" id="img" alt="Image" />
+                                    @Html.HiddenFor(model => model.MovieImagePath)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <div class="col">
+                                    @Html.LabelFor(model => model.MovieDescription, "Description", new { @class = "FieldLabel small" })
+                                    @Html.TextAreaFor(model => model.MovieDescription, new { @class = "form-control col"})
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col">
+                            <input type="submit" value="Save" class="btn btn-default col btn-success" />
+                        </div>
+                    </div>
+                </div>
+                
+                    }
+
+                    <div>
+                        @Html.ActionLink("Back to List", "Index", new { area = "" }, new { @class = "col" })
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

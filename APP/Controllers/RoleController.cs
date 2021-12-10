@@ -1,10 +1,6 @@
 ﻿using APP.Models;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -36,6 +32,8 @@ namespace APP.Controllers
                 _roleManager = value;
             }
         }
+
+        // show all roles on role index page
         public ActionResult Index()
         {
             List<RoleViewModel> list = new List<RoleViewModel>();
@@ -49,6 +47,7 @@ namespace APP.Controllers
             return View();
         }
 
+        // create a new role
         [HttpPost]
         public async Task<ActionResult> Create(RoleViewModel model)
         {
@@ -57,12 +56,14 @@ namespace APP.Controllers
             return RedirectToAction("Index");   
         }
 
+       
         public async Task<ActionResult> Edit (string id)
         {
             var role = await RoleManager.FindByIdAsync(id);
             return View(new RoleViewModel(role));
         }
 
+        // edit a role
         [HttpPost]
         public async Task<ActionResult> Edit(RoleViewModel model)
         {
@@ -71,11 +72,13 @@ namespace APP.Controllers
             return RedirectToAction("Index");
         }
 
+        // see role details
         public async Task<ActionResult> Details(string id)
         {
             var role = await RoleManager.FindByIdAsync(id);
             return View(new RoleViewModel(role));
         }
+
 
         public async Task<ActionResult> Delete(string id)
         {
@@ -83,11 +86,13 @@ namespace APP.Controllers
             return View(new RoleViewModel(role));
         }
 
+        // delete a role
         [HttpPost]
         public async Task<ActionResult> Delete(RoleViewModel model)
         {
-            var role = await RoleManager.FindByIdAsync(model.Id);
-            await RoleManager.DeleteAsync(role);
+            
+            var role = await RoleManager.FindByIdAsync(model.Id); // gets a role by id
+            await RoleManager.DeleteAsync(role);  // deletes the role
             return RedirectToAction("Index");
         }
     }

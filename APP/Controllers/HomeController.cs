@@ -1,16 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using APP.Repository;
 using System.Web.Mvc;
 
 namespace APP.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly IMovieRepository _movieRepository;
+        
+        public HomeController()
+        {
+            _movieRepository = Factory.Factory.CreateMovieRepository();
+        }
         public ActionResult Index()
         {
-            return View();
+            var movies = _movieRepository.GetMovies();
+            return View(movies);
         }
 
         [Authorize(Roles = "Admin")]

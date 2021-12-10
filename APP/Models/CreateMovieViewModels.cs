@@ -19,8 +19,8 @@ namespace APP.Models
         [Required]
         public string StreamingLink { get; set; }
         [Required]
-        public string ImagePath { get; set; }
-        [Required]
         public string Actors { get; set; }
+        [Required]
+        public HttpPostedFileBase PostedFile { get; set; }
     }
 }

@@ -9,15 +9,19 @@ namespace APP.Repository
 {
     public class MovieRepository : IMovieRepository
     {
-        private ApplicationDbContext context;
-        public MovieRepository(ApplicationDbContext _context)
+        private ApplicationDbContext _context;
+        
+        public MovieRepository()
         {
-            this.context = _context;
+            this._context = Factory.Factory.CreateContext();
         }
+
+        // delete a movie from database
         public void DeleteMovie(string movieId)
         {
-            Movie movie = context.Movies.Find(movieId);
-            context.Movies.Remove(movie);
+            var movie = _context.Movies.Find(movieId);
+            _context.Movies.Remove(movie);
+            _context.SaveChanges();
         }
 
         public void Dispose()
@@ -25,29 +29,33 @@ namespace APP.Repository
             throw new NotImplementedException();
         }
 
+        // get a single movie from database 
         public Movie GetMovieById(string movieId)
         {
-            return context.Movies.Find(movieId);
+            return _context.Movies.Find(movieId);
         }
 
+        // get all movies from database
         public IEnumerable<Movie> GetMovies()
         {
-            return context.Movies.ToList();
+            return _context.Movies.ToList();
         }
 
+        // adding a movie to database
         public void InsertMovie(Movie movie)
         {
             if(movie!=null)
             {
-                context.Movies.Add(movie);
-                context.SaveChanges();
+                _context.Movies.Add(movie);
+                _context.SaveChanges();
             }
         }
 
+        // update a movie 
         public void UpdateMovie(Movie movie)
         {
-            context.Entry(movie).State = EntityState.Modified;
-            context.SaveChanges();
+            _context.Entry(movie).State = EntityState.Modified;
+            _context.SaveChanges();
         }
     }
 }

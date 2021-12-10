@@ -1,0 +1,44 @@
+﻿@model APP.Models.Movie
+@{
+    ViewBag.Title = "Delete";
+}
+
+<div class="container-fluid pt-5">
+    <div class="row">
+        <div class="col-md-5 mx-auto">
+            <div class="card shadow">
+                <div class="card-body mx-auto">
+                    <h4 class="text-center">Delete role?</h4>
+                    <div>
+
+                        <hr />
+                        <dl class="dl-horizontal">
+
+
+                            <dd>
+                                @Html.TextBoxFor(model => model.MovieName, new { @class = "form-control col", @readonly = "true" })
+                            </dd>
+
+                        </dl>
+
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            @Html.HiddenFor(model => model.Id)
+                            <div class="form-actions no-color">
+
+                                <input type="submit" value="Delete" class="btn btn-default col btn-danger" />
+
+                            </div>
+
+                        }
+                        <div>
+                            @Html.ActionLink("Back to List", "Index")
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
