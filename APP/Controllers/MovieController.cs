@@ -94,7 +94,7 @@ namespace APP.Controllers
         [HttpPost]
         public ActionResult Details(Movie movie)
         {
-            // e treba mi i user id DANTEJEBO
+            
             return RedirectToAction("Details");
         }
     }
