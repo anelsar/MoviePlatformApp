@@ -134,6 +134,7 @@ namespace APP.Controllers
 
         // gets called after the add to favourite button on details view
         [HttpPost]
+
         public async Task<ActionResult> Details(string movieId, string userName)
         {           
             var user = await UserManager.FindByEmailAsync(userName); // getting the user by his username (usernames are also unique like id's)
@@ -149,6 +150,8 @@ namespace APP.Controllers
                 _userMovie.UserId = user.Id;
                 _userMovieRepo.AddNewFavouriteMovie(_userMovie);
             }        
+
+
             return RedirectToAction("Details");
         }
 
