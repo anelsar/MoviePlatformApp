@@ -1,4 +1,5 @@
 ﻿using APP.Repository;
+using APP.Services;
 using System.Web.Mvc;
 
 namespace APP.Controllers
@@ -6,18 +7,16 @@ namespace APP.Controllers
     public class HomeController : Controller
     {
         private readonly IMovieRepository _movieRepository;
-        
+
         public HomeController()
         {
-            _movieRepository = Factory.Factory.CreateMovieRepository();
+            _movieRepository = Factory.Factory.CreateMovieRepository();           
         }
         public ActionResult Index()
         {
-            var movies = _movieRepository.GetMovies();
-            return View(movies);
+            return View(_movieRepository.GetMovies());
         }
 
-        [Authorize(Roles = "Admin")]
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";

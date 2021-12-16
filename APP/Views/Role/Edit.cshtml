@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = "Edit";
+    TempData["roleBeforeUpdate"] = Model.Name;
 }
 
 <div class="container-fluid pt-5">
@@ -28,7 +29,6 @@
                                         @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
-
                                 <div class="form-group">
                                     <div class="col-md-offset-2 col">
                                         <input type="submit" value="Save" class="btn btn-default col btn-success" />

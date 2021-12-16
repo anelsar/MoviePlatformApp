@@ -6,6 +6,7 @@
     <title>@ViewBag.Title - My ASP.NET Application</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    
     <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -15,31 +16,28 @@
         </button>
         @Html.ActionLink("MoviePlatform", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
 
-    <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
-        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-            <li class="nav-item mr-1">
-                @Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "nav-link" })
-            </li>
-            <li class="nav-item mr-1">
-                @Html.ActionLink("About", "About", "Home", new { area = "" }, new { @class = "nav-link" })
-            </li>
-            <li class="nav-item mr-1">
-                @Html.ActionLink("Contact", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })
-            </li>
-            
-        </ul>
-        <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
-        @Html.Partial("_LoginPartial")
-    </div>
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                <li class="nav-item mr-1">
+                    @Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "nav-link" })
+                </li>
+            </ul>
+            @if (ViewContext.RouteData.Values["Controller"].ToString() == "Home")
+            {
+                <form class="form-inline my-2 my-lg-0">
+                    <input class="form-control mr-sm-2" id="searchInput" type="search" onkeyup="searchMovie()" placeholder="Search movie" aria-label="Search">
+
+                </form>
+            }
+
+            @Html.Partial("_LoginPartial")
+        </div>
     </nav>
     <div class="container-fluid body-content">
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            <p class="text-white">&copy; @DateTime.Now.Year - Online movie streaming platform</p>
         </footer>
     </div>
 

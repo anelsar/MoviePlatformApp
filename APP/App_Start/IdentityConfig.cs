@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using System.Web;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
@@ -18,6 +14,8 @@ namespace APP
     {
         public Task SendAsync(IdentityMessage message)
         {
+            var emailSender = Factory.Factory.CreateMessageService();
+            emailSender.SendEmail(message.Body, message.Subject, message.Destination);
             // Plug in your email service here to send an email.
             return Task.FromResult(0);
         }
@@ -64,7 +62,7 @@ namespace APP
             manager.UserLockoutEnabledByDefault = true;
             manager.DefaultAccountLockoutTimeSpan = TimeSpan.FromMinutes(5);
             manager.MaxFailedAccessAttemptsBeforeLockout = 5;
-
+            
             // Register two factor authentication providers. This application uses Phone and Emails as a step of receiving a code for verifying the user
             // You can write your own provider and plug it in here.
             manager.RegisterTwoFactorProvider("Phone Code", new PhoneNumberTokenProvider<ApplicationUser>

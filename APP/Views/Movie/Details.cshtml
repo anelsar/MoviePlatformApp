@@ -10,6 +10,10 @@
                 <div class="card-body mx-auto">
 
                     <h4 class="text-center">Movie details</h4>
+                    @if (TempData["Error"] != null)
+                    {
+                        <p class="alert alert-warning text-center" id="successMessage">@TempData["Error"]</p>
+                    }
                     <hr />
                     <div class="row">
                         <div class="col">
@@ -63,19 +67,38 @@
                             </div>
                         </div>
                     </div>
-                    @using (Html.BeginForm())
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        using (Html.BeginForm())
                         {
                             <div class="form-group mx-auto">
-                                <div class="col-4 mx-auto">
+                                <div class="col-md-5 mx-auto">
+                                    @Html.Hidden("movieId", Model.Id)
+                                    @Html.Hidden("userName", User.Identity.Name)
                                     <input type="submit" value="Add to favourites" class="btn btn-default col btn-success" />
-                                    @Html.HiddenFor(model => model.Id);
+
                                 </div>
                             </div>
                         }
-                        <p>
-                            @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-                            @Html.ActionLink("Back to List", "Index")
-                        </p>
+                    }
+                <p>                     
+                        
+                    @if (User.IsInRole("Admin"))
+                    {
+
+                    @Html.ActionLink("Edit ", "Edit", new { id = Model.Id }, new { @class = "m-1" })
+                    }
+                    
+                    @if(User.IsInRole("Admin"))
+                    { 
+                    @Html.ActionLink(" Back to List ", "Index", new {  }, new { @class = "m-1" })
+                     
+                    }
+                    
+                @Html.ActionLink(" Back to start page", "Index", "Home", new {}, new { @class = "m-1" })
+
+                    
+                </p>
                 </div>
                    
                 </div>

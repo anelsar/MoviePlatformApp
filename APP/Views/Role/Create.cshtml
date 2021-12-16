@@ -17,13 +17,13 @@
                             <h4>Create a new role</h4>
                             <hr />
                             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                            
+
 
                             <div class="form-group">
-                               
+
                                 <div class="col-md-10">
-                                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", placeholder="Role name" } })
-                                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", placeholder = "Role name" } })
+                                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger small" })
                                 </div>
                             </div>
 
@@ -34,13 +34,16 @@
                             </div>
                         </div>
                     }
-                <div class="row">
-                    <div class="col-md-10 mx-auto">
-                        @Html.ActionLink("Back to List", "Index")
+                    <div class="row">
+                        <div class="col-md-10 mx-auto">
+                            @Html.ActionLink("Back to List", "Index")
+                        </div>
                     </div>
-                </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

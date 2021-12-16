@@ -9,7 +9,7 @@ namespace APP.Repository
 {
     public class MovieRepository : IMovieRepository
     {
-        private ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
         
         public MovieRepository()
         {

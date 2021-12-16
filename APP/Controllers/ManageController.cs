@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -10,7 +9,7 @@ using APP.Models;
 
 namespace APP.Controllers
 {
-    [Authorize]
+    [Services.Authorize]
     public class ManageController : Controller
     {
         private ApplicationSignInManager _signInManager;
@@ -321,7 +320,32 @@ namespace APP.Controllers
             var result = await UserManager.AddLoginAsync(User.Identity.GetUserId(), loginInfo.Login);
             return result.Succeeded ? RedirectToAction("ManageLogins") : RedirectToAction("ManageLogins", new { Message = ManageMessageId.Error });
         }
+        
+        public ActionResult DeleteAccount()
+        {
+            return View();
+        }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> DeleteAccount(DeleteAccountViewModel model)
+        {
+            if(ModelState.IsValid)
+            {
+                var user = UserManager.FindByEmail(User.Identity.Name);
+                if((await UserManager.PasswordValidator.ValidateAsync(model.Password)).Succeeded)
+                {
+                    var userDeleted =  (await UserManager.DeleteAsync(user)).Succeeded;
+                    if(userDeleted)
+                    {
+                        // moram ovaj view vratiti dobar ostaak radi dobro memehmmhemhmhmh
+                        AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+                        return RedirectToAction("Index", "Home");
+                    }
+                }
+            }
+            return View();
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing && _userManager != null)

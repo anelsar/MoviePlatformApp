@@ -10,7 +10,9 @@ namespace APP.Repository
     public interface IUserMovieRepository : IDisposable
     {
         IEnumerable<UserMovie> GetAllUsersMovies(string userId);
-        void AddNewMovie(UserMovie userMovie);
+        void AddNewFavouriteMovie(UserMovie userMovie);
         void DeleteMovie(string userMovieid);
+        bool CheckIfAlreadyFavoruite(string movieId, string userId);
+        
     }
 }
