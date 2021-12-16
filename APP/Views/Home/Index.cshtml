@@ -3,19 +3,24 @@
     ViewBag.Title = "Home Page";
 }
 
+@if (TempData["Confirm"] != null)
+{
+    <p class="alert alert-warning" id="successMessage">@TempData["Confirm"]</p>
+}
 <div class="container-fluid content-row mt-1">
-    <div class="row">
+    <div id="outerDiv"class="row">
+
         @foreach (var movie in Model)
         {
             <div class="col-md-2">
-                <div class="row">
-                    <div class="card flex-fill h-auto">
+                <div  class="row">
+                    <div  id="myCard" class="card flex-fill h-auto bg-dark">
                         <a href="@Url.Action("Details", "Movie", new { id = movie.Id })">
                             <img class="card-img-top" alt="List View" height="250vh" width="20rem" src="@Url.Content($"~/Images/{@movie.MovieImagePath}")">
                         </a>
                         <div class="card-body">
                             <div class="row">
-                                <p class="card-text">@movie.MovieName</p>
+                                <p id="movieName" class="card-text text-white"><b>@movie.MovieName</b></p>
                             </div>
                         </div>
                     </div>
@@ -25,3 +30,27 @@
     </div>
 </div>
 
+@section scripts
+{
+    <script>
+        function searchMovie() {
+            var input, filter, div, cards, p, i, txtValue;
+            input = document.getElementById('searchInput');
+            filter = input.value.toUpperCase();
+            div = document.getElementById('outerDiv');
+            cards = div.getElementsByClassName('col-md-2')
+
+            // Loop through all list items, and hide those who don't match the search query
+            for (i = 0; i < cards.length; i++) {
+                p = cards[i].getElementsByTagName("p")[0];
+                txtValue = p.textContent || p.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    cards[i].style.display = "";
+                } else {
+                    cards[i].style.display = "none";
+                }
+            }
+        }
+       
+    </script>
+}

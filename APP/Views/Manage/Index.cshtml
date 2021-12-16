@@ -56,7 +56,13 @@
                                     @Html.ActionLink("Add phone number", "AddPhoneNumber", new { area = "" }, new { @class = "nav-link" })
                                 }
                             </li>
-
+                            
+                            <li class="list-group-item">
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                    @Html.ActionLink("Delete account", "DeleteAccount", new { area = "" }, new { @class = "nav-link" })
+                                }
+                            </li> 
 
                             @*@if (Model.TwoFactor)
         {

@@ -14,8 +14,9 @@
                         <h4 class="text-center">Add a new movie</h4>
                         <div class="form-group">
                             <div class="col-md-12 text-center">
-                                <img src="~/Images/noImage.jpg" id="img" alt="Image" height="100"/>    
+                                <img src="~/Images/noImage.jpg" id="img" alt="Image" height="100" />
                             </div>
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                             <div class="col-md-12">
                                 @Html.TextBoxFor(m => m.PostedFile, new { @class = "form-control-file col", type = "file", onChange = "readURL(this)", id = "upload" })
                                 @Html.ValidationMessageFor(m => m.PostedFile, "", new { @class = "text-danger small" })

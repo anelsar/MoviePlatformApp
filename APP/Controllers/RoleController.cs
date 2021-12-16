@@ -51,8 +51,12 @@ namespace APP.Controllers
         [HttpPost]
         public async Task<ActionResult> Create(RoleViewModel model)
         {
-            var role = new ApplicationRole() { Name = model.Name };
-            await RoleManager.CreateAsync(role);
+            if(ModelState.IsValid)
+            {
+                var role = new ApplicationRole() { Name = model.Name };
+                await RoleManager.CreateAsync(role);
+            }
+            
             return RedirectToAction("Index");   
         }
 
@@ -67,8 +71,16 @@ namespace APP.Controllers
         [HttpPost]
         public async Task<ActionResult> Edit(RoleViewModel model)
         {
-            var role = new ApplicationRole() { Id = model.Id, Name = model.Name };
-            await RoleManager.UpdateAsync(role);
+            if(TempData["roleBeforeUpdate"] != null)
+            {
+                string roleBeforeUpdate = (string)TempData["roleBeforeUpdate"];
+                if(roleBeforeUpdate != model.Name)
+                {
+                    var role = new ApplicationRole() { Id = model.Id, Name = model.Name };
+                    await RoleManager.UpdateAsync(role);
+                }                
+            }
+            
             return RedirectToAction("Index");
         }
 
