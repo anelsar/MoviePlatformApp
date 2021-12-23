@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Web;
 
 namespace APP.Repository
 {
@@ -17,11 +16,16 @@ namespace APP.Repository
         }
 
         // delete a movie from database
-        public void DeleteMovie(string movieId)
+        public int DeleteMovie(string movieId)
         {
-            var movie = _context.Movies.Find(movieId);
-            _context.Movies.Remove(movie);
-            _context.SaveChanges();
+            if(movieId != null)
+            {
+                var movie = _context.Movies.Find(movieId);
+                _context.Movies.Remove(movie);
+                var deletedMovie = _context.SaveChanges();
+                return deletedMovie;
+            }
+            return 0;
         }
 
         public void Dispose()
@@ -42,20 +46,27 @@ namespace APP.Repository
         }
 
         // adding a movie to database
-        public void InsertMovie(Movie movie)
+        public int InsertMovie(Movie movie)
         {
             if(movie!=null)
             {
                 _context.Movies.Add(movie);
-                _context.SaveChanges();
+                var number = _context.SaveChanges();
+                return number;
             }
+            return 0;
         }
 
         // update a movie 
-        public void UpdateMovie(Movie movie)
+        public int UpdateMovie(Movie movie)
         {
-            _context.Entry(movie).State = EntityState.Modified;
-            _context.SaveChanges();
+            if(movie != null)
+            {
+                _context.Entry(movie).State = EntityState.Modified;
+                var updatedMovie = _context.SaveChanges();
+                return updatedMovie;
+            }
+            return 0;
         }
     }
 }

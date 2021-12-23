@@ -16,33 +16,35 @@ namespace APP.Repository
             this._context = Factory.Factory.CreateContext();
         }
 
-        public void AddNewFavouriteMovie(UserMovie userMovie)
+        public int AddNewFavouriteMovie(UserMovie userMovie)
         {
             if(userMovie != null)
             {
                 userMovie.Id = IdGenerate.generateId();
                 _context.UserMovies.Add(userMovie);
-                _context.SaveChanges();
+                var addedMovie = _context.SaveChanges();
+                return addedMovie;
             }
+            return 0;
         }
 
         public bool CheckIfAlreadyFavoruite(string movieId, string userId)
-        {
-            if(movieId != null && userId != null)
-            {
-                return _context.UserMovies.Where(x => x.UserId == userId && x.MovieId == movieId).Any();
-            }
-            throw new Exception();
+        {          
+                return _context.UserMovies.Where(x => x.UserId == userId && x.MovieId == movieId).Any();   
         }
 
-        public void DeleteMovie(string userMovieid)
+        public int DeleteMovie(string userMovieid)
         {
             if(userMovieid != null)
             {
                 var movie = _context.UserMovies.Find(userMovieid);
+                if (movie == null)
+                    return 0;
                 _context.UserMovies.Remove(movie);
-                _context.SaveChanges();
+                var deletedUserMovie = _context.SaveChanges();
+                return deletedUserMovie;
             }
+            return 0;
         }
 
         public void Dispose()

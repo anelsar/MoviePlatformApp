@@ -9,15 +9,20 @@
         <div class="col-md-6 mx-auto">
             <div class="card shadow">
                 <div class="card-body mx-auto">
+                    <div class="row">
+                        <div class="col">
+                            <h2 class="text-danger">@Html.ValidationMessage("")</h2>
+                        </div>                        
+                    </div>
                     <section id="loginForm">
                         @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
                         {
                             @Html.AntiForgeryToken()
-                            <h4>User log in</h4>
+                            <h4 class="text-center">User log in</h4>
                             <hr />
-                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            
                     <div class="form-group">
-                        @*@Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })*@
+                        
                         <div class="col-md-12">
                             @Html.TextBoxFor(m => m.Email, new { @class = "form-control col", placeholder = "Email address" })
                             @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger small" })

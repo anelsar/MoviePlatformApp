@@ -18,7 +18,7 @@
                         @Html.ActionLink("User management", "ManageUsers", "Admin", new { area = "" }, new { @class = "dropdown-item" })
                     }
                     @Html.ActionLink("Profile management", "Index", "Manage", new { area = "" }, new { @class = "dropdown-item" })
-                    @Html.ActionLink("Favourite movies", "FavouriteMovies", "Movie",  new { userName = User.Identity.Name }, new { @class = "dropdown-item" })
+                    @Html.ActionLink("Favourite movies", "FavouriteMovies", "Movie",  new { id =  User.Identity.GetUserId() }, new { @class = "dropdown-item" })
                     <a class="text-muted dropdown-item" href="javascript:document.getElementById('logoutForm').submit()">
                         Log off
                     </a>

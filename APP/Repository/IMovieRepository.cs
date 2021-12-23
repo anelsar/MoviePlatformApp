@@ -11,9 +11,9 @@ namespace APP.Repository
     {
         IEnumerable<Movie> GetMovies();
         Movie GetMovieById(string movieId);
-        void InsertMovie(Movie movie);
-        void UpdateMovie(Movie movie);
-        void DeleteMovie(string movieId);
+        int InsertMovie(Movie movie);
+        int UpdateMovie(Movie movie);
+        int DeleteMovie(string movieId);
 
     }
 }

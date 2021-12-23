@@ -5,13 +5,13 @@
 
 <div class="container-fluid pt-5">
     <div class="row">
-        <div class="col-md-6 mx-auto">
+        <div class="col-lg-6 mx-auto">
             <div class="card shadow">
                 <div class="card-body mx-auto">
                     <h4 class="text-center py-3">Movie settings</h4>
                     @if (TempData["Success"] != null)
                     {
-                        <p class="alert alert-success" id="successMessage">@TempData["Success"]</p>
+                        <p class="alert alert-success text-center" id="successMessage">@TempData["Success"]</p>
                     }
                     <div class="row">
                         <div class="col mx-auto">
@@ -21,18 +21,25 @@
                             </p>
                         </div>
                     </div>
-                    <table class="table">
+                    <table class="table" id="outerDiv">
                         <tr>
-                            <th>
+                            <th class="border-top-0">
                                 Movies
                             </th>
-                            <th></th>
+                            <th class="input-group border-top-0">
+                                <div class="row form-inline">
+                                    <input class="form-control mr-sm-2" id="searchInput" type="search" onkeyup="searchMovie()" placeholder="Search for a movie" aria-label="Search">
+                                </div>
+                            </th>
                         </tr>
 
                         @foreach (var item in Model)
                         {
-                            <tr>
+                            <tr class="someClass">
                                 <td>
+                                    <img class="card-img-top mt-1" alt="List View" height="50vh" src="@Url.Content($"~/Images/{item.MovieImagePath}")">
+                                </td>
+                                <td class="movieNameClass">
                                     @Html.DisplayFor(modelItem => item.MovieName)
                                 </td>
                                 <td>
@@ -50,3 +57,27 @@
     </div>
 </div>
 
+@section scripts
+{
+    <script>
+        function searchMovie() {
+            var input, filter, div, cards, p, i, txtValue;
+            input = document.getElementById('searchInput');
+            filter = input.value.toUpperCase();
+            div = document.getElementById('outerDiv');
+            cards = div.getElementsByClassName('someClass')
+
+            // Loop through all list items, and hide those who don't match the search query
+            for (i = 0; i < cards.length; i++) {
+                p = cards[i].getElementsByClassName("movieNameClass")[0];
+                txtValue = p.textContent || p.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    cards[i].style.display = "";
+                } else {
+                    cards[i].style.display = "none";
+                }
+            }
+        }
+
+    </script>
+}

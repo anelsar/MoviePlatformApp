@@ -5,24 +5,24 @@
 
 @if (TempData["Confirm"] != null)
 {
-    <p class="alert alert-warning" id="successMessage">@TempData["Confirm"]</p>
+    <p class="alert alert-success mt-2 text-center" id="successMessage">@TempData["Confirm"]</p>
+}
+@if (TempData["Success"] != null)
+{
+    <p class="alert alert-success mt-2 text-center" id="successMessage">@TempData["Success"]</p>
 }
 <div class="container-fluid content-row mt-1">
-    <div id="outerDiv"class="row">
+    <div id="outerDiv" class="row">
 
         @foreach (var movie in Model)
         {
-            <div class="col-md-2">
-                <div  class="row">
-                    <div  id="myCard" class="card flex-fill h-auto bg-dark">
-                        <a href="@Url.Action("Details", "Movie", new { id = movie.Id })">
-                            <img class="card-img-top" alt="List View" height="250vh" width="20rem" src="@Url.Content($"~/Images/{@movie.MovieImagePath}")">
-                        </a>
-                        <div class="card-body">
-                            <div class="row">
-                                <p id="movieName" class="card-text text-white"><b>@movie.MovieName</b></p>
-                            </div>
-                        </div>
+            <div id="myCard" class="card col-md-2 bg-dark mt-1">
+                <a href="@Url.Action("Details", "Movie", new { id = movie.Id })">
+                    <img class="card-img-top mt-1" alt="List View" height="250vh" src="@Url.Content($"~/Images/{@movie.MovieImagePath}")">
+                </a>
+                <div class="card-body">
+                    <div class="row justify-content-center">
+                        <p id="movieName" class="card-text text-white text-center"><b>@movie.MovieName</b></p>
                     </div>
                 </div>
             </div>
@@ -51,6 +51,6 @@
                 }
             }
         }
-       
+
     </script>
 }
