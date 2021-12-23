@@ -190,6 +190,7 @@ namespace APP.Controllers
 
         // gets called after the add to favourite button on details view
         [HttpPost]
+
         public async Task<ActionResult> Details(string movieId, string userName)
         {           
             if(movieId != null && userName != null) // checking if we have the required parameters
