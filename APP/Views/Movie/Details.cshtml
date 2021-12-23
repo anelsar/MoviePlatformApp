@@ -14,6 +14,10 @@
                     {
                         <p class="alert alert-warning text-center" id="successMessage">@TempData["Error"]</p>
                     }
+                    @if (TempData["Success"] != null)
+                    {
+                        <p class="alert alert-success text-center" id="successMessage">@TempData["Success"]</p>
+                    }
                     <hr />
                     <div class="row">
                         <div class="col">
@@ -81,24 +85,24 @@
                             </div>
                         }
                     }
-                <p>                     
-                        
-                    @if (User.IsInRole("Admin"))
-                    {
+                    <p>
 
-                    @Html.ActionLink("Edit ", "Edit", new { id = Model.Id }, new { @class = "m-1" })
-                    }
-                    
-                    @if(User.IsInRole("Admin"))
-                    { 
-                    @Html.ActionLink(" Back to List ", "Index", new {  }, new { @class = "m-1" })
-                     
-                    }
-                    
-                @Html.ActionLink(" Back to start page", "Index", "Home", new {}, new { @class = "m-1" })
+                        @if (User.IsInRole("Admin"))
+                        {
 
-                    
-                </p>
+                            @Html.ActionLink("Edit ", "Edit", new { id = Model.Id }, new { @class = "m-1" })
+                        }
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            @Html.ActionLink(" Back to List ", "Index", new { }, new { @class = "m-1" })
+
+                        }
+
+                        @Html.ActionLink(" Back to start page", "Index", "Home", new { }, new { @class = "m-1" })
+
+
+                    </p>
                 </div>
                    
                 </div>

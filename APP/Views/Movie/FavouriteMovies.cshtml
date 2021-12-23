@@ -5,35 +5,44 @@
 
 <div class="container-fluid content-row mt-1">
     <div class="row">
-        <div class="col d-flex align-items-stretch">
-            @foreach (var movie in Model)
-            {
-                // moram podesiti izgled, nije dobro
-                <div class="card col-md-2 bg-dark">
+        @foreach (var movie in Model)
+        {
 
-                    <img class="card-img-top" alt="List View" height="250vh" width="20rem" src="@Url.Content($"~/Images/{@movie.Movie.MovieImagePath}")">
-
-                    <div class="card-body">
+            <div class="card col-md-2 bg-dark mt-1">
+                <img class="card-img-top mt-1" alt="List View" height="250vh" width="20rem" src="@Url.Content($"~/Images/{@movie.Movie.MovieImagePath}")">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <div class="row justify-content-center">
+                                <p class=" text-white font-weight-bold text-center">@movie.Movie.MovieName</p>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col">
-                                <p class="card-text text-white">@movie.Movie.MovieName</p>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    @using (Html.BeginForm("DeleteFavouriteMovie", "Movie", new { id = movie.Id }, FormMethod.Post))
-                                    {
-                                        @Html.AntiForgeryToken()
-                                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })                                              
-                                        <div class="form-actions">
-                                            <input type="submit" value="X" class="btn btn-default  btn-danger float-right" />
-                                        </div>
-                                    }
-                                </div>
+                                @using (Html.BeginForm("DeleteFavouriteMovie", "Movie", new { id = movie.Id }, FormMethod.Post))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                    <div class="form-actions">
+                                        <input type="submit" value="X" data-toggle="tooltip" data-placement="top" title="Delete" class="btn btn-default  btn-danger float-right" />
+                                    </div>
+                                }
                             </div>
                         </div>
                     </div>
-                </div>                   
-            }
-        </div>
+                </div>
+            </div>
+        }
+
     </div>
 </div>
+@section scripts
+{
+    
+        <script>
+            $(document).ready(function(){
+                $('[data-toggle="tooltip"]').tooltip();
+            });
+        </script>
+     
+}
