@@ -13,6 +13,6 @@ namespace APP.Repository
         int AddNewFavouriteMovie(UserMovie userMovie);
         int DeleteMovie(string userMovieid);
         bool CheckIfAlreadyFavoruite(string movieId, string userId);
-        
+        IEnumerable<UserMovie> GetAllUsersWithTheSameMovie(string movieId);
     }
 }

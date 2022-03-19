@@ -12,12 +12,11 @@ namespace APP.Models
         {
             Id = user.Id;
             Name = user.Email;
-            //Roles = user.Roles;
+            EmailVerified = user.EmailConfirmed;
         }
         public string Id { get; set; }
         public string Name { get; set; }
-
-        //List<string> Roles { get; set; }
+        public bool EmailVerified { get; set; }
     }
 
 }

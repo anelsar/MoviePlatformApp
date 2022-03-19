@@ -21,6 +21,9 @@
                 <li class="nav-item mr-1">
                     @Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "nav-link" })
                 </li>
+                <li class="nav-item mr-1">
+                    @Html.ActionLink("About", "About", "Home", new { area = "" }, new { @class = "nav-link" })
+                </li>
             </ul>
             @if (ViewContext.RouteData.Values["Controller"].ToString() == "Home")
             {

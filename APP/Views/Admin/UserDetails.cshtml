@@ -11,7 +11,31 @@
                     <h4 class="text-center">User details</h4>
                     <div class="form-group">
                         <div class="col-md-12">
-                            @Html.TextBoxFor(model => model.Name, new { @class = "form-control col", @readonly = "true" })
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-group">
+                                        <div class="col">
+                                            @Html.LabelFor(model => model.Name, "Name", new { @class = "FieldLabel small" })
+                                            @Html.TextBoxFor(model => model.Name, new { @class = "form-control col", @readonly = "true" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-group">
+                                        <div class="col">
+                                            @Html.LabelFor(model => model.EmailVerified, "Account confirmed", new { @class = "FieldLabel small" })
+                                            @Html.TextBoxFor(model => model.EmailVerified, new { @class = "form-control col", @readonly = "true" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    @Html.ActionLink("Back to user list", "ManageUsers", new { area = "" }, new { @class = "col" })
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

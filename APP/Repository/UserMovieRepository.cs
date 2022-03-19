@@ -33,6 +33,17 @@ namespace APP.Repository
                 return _context.UserMovies.Where(x => x.UserId == userId && x.MovieId == movieId).Any();   
         }
 
+        public IEnumerable<UserMovie> GetAllUsersWithTheSameMovie(string movieId)
+        {
+            if(movieId != null)
+            {
+                var usersWithTheSameMovie = _context.UserMovies.Where(x => x.MovieId == movieId).ToList();
+                return usersWithTheSameMovie;
+            }
+
+            return null;
+        }
+
         public int DeleteMovie(string userMovieid)
         {
             if(userMovieid != null)

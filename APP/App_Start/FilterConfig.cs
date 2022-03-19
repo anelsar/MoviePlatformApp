@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using APP.Services;
+using System.Web;
 using System.Web.Mvc;
 
 namespace APP
@@ -9,6 +10,7 @@ namespace APP
         {
             filters.Add(new HandleErrorAttribute());
             filters.Add(new RequireHttpsAttribute());
+            //filters.Add(new HttpRequestValidationExceptionAttribute());
         }
     }
 }

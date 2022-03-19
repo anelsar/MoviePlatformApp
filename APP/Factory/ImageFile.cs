@@ -1,4 +1,6 @@
 ﻿
+using System.IO;
+
 namespace APP.Factory
 {
     public class ImageFile : IFile

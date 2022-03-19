@@ -7,7 +7,7 @@ using System.Web.Mvc;
 
 namespace APP.Controllers
 {
-    [Services.Authorize(Roles = "Admin")]
+    [Services.Authorize(Roles = "Admin, Global administrator")]
     public class AdminController : Controller
     {
         private ApplicationUserManager _userManager;
@@ -54,14 +54,24 @@ namespace APP.Controllers
 
         public async Task<ActionResult> UserDetails(string id)
         {
-            var user = await UserManager.FindByIdAsync(id);
-            ManageUserViewModel model = new ManageUserViewModel(user);
-
-            return View(model);
+            if(id != null)
+            {
+                var user = await UserManager.FindByIdAsync(id);
+                if(user == null)
+                {
+                    ViewBag.errorMessage = "No user with that user ID";
+                    return View("../Shared/Error");
+                }
+                ManageUserViewModel model = new ManageUserViewModel(user);
+                return View(model);
+            }
             
+            ViewBag.errorMessage = "Not a valid user ID";
+            return View("../Shared/Error");
         }
 
         // GET 
+        [Services.Authorize(Roles = "Global administrator")]
         public async Task<ActionResult> AddRoleToUser(string id) // prikazuje sve role, one koje su dodijeljene trenutnom korisniku su oznacene
         {         
             var user = await UserManager.FindByIdAsync(id); // vraca nam trenutnog korisnika
@@ -96,6 +106,8 @@ namespace APP.Controllers
         }
 
         [HttpPost]
+        [Services.Authorize(Roles = "Global administrator")]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> AddRoleToUser(AddRoleToUserViewModel model)
         {
            if(model != null)

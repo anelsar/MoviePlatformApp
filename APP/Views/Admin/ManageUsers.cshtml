@@ -25,8 +25,13 @@
                                     
                                 </td>
                                 <td>
-                                    @Html.ActionLink("Add a role", "AddRoleToUser", "Admin", new { id = item.Id }, null)
-                                    | @Html.ActionLink("Details", "UserDetails", "Admin", new { id = item.Id }, null)
+                                    @if (User.IsInRole("Global administrator"))
+                                    {
+                                        @Html.ActionLink("Add a role", "AddRoleToUser", "Admin", new { id = item.Id }, null) 
+                                        <span>|</span>
+                                    }
+
+                                     @Html.ActionLink("Details", "UserDetails", "Admin", new { id = item.Id }, null)
                                 </td>
                             </tr>
                         }

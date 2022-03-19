@@ -75,25 +75,31 @@
                     {
                         using (Html.BeginForm())
                         {
+                            @Html.AntiForgeryToken()
                             <div class="form-group mx-auto">
                                 <div class="col-md-5 mx-auto">
                                     @Html.Hidden("movieId", Model.Id)
                                     @Html.Hidden("userName", User.Identity.Name)
-                                    <input type="submit" value="Add to favourites" class="btn btn-default col btn-success" />
-
+                                    <div class="row justify-content-center">        
+                                        
+                                            <p class="">
+                                                <input type="submit" value="Add to favourites" class="btn btn-default col btn-success" />
+                                            </p>
+                                        
+                                    </div>
                                 </div>
                             </div>
                         }
                     }
                     <p>
 
-                        @if (User.IsInRole("Admin"))
+                        @if (User.IsInRole("Admin") || User.IsInRole("Global administrator"))
                         {
 
                             @Html.ActionLink("Edit ", "Edit", new { id = Model.Id }, new { @class = "m-1" })
                         }
 
-                        @if (User.IsInRole("Admin"))
+                        @if (User.IsInRole("Admin") || User.IsInRole("Global administrator"))
                         {
                             @Html.ActionLink(" Back to List ", "Index", new { }, new { @class = "m-1" })
 

@@ -19,7 +19,7 @@
                             @Html.AntiForgeryToken()
                             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                     <div class="form-group">
-                        @Html.TextBoxFor(model => model.Password, new { @class = "form-control col", placeholder = "Enter password" })
+                        @Html.PasswordFor(model => model.Password, new { @class = "form-control col", placeholder = "Enter password" })
                         @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger small" })
                     </div>
                             <div class="form-actions no-color">
