@@ -10,8 +10,28 @@
     <div class="col-md-6 mx-auto">
         <div class="card shadow">
             <div class="card-body mx-auto">
-                <h1 class="text-danger">Error.</h1>
-                <h2 class="text-danger">@ViewBag.errorMessage</h2>
+                <h1 class="text-danger text-center">Error!</h1>
+                <h2>Something went wrong</h2>
+                @if(Model.Exception.Message.Contains("dangerous"))
+                    {
+                    <h3 class="text-danger text-center">
+
+                        A potential dangerous request!!!
+
+                    </h3>
+                    }
+                
+               
+                    
+                    
+            else 
+                {<h3 class="text-danger text-center">
+                @if (Model != null)
+                            {@Model.Exception.Message }
+                            else
+                            { @ViewBag.errorMessage}
+                 </h3> }
+                
             </div>
         </div>
     </div>

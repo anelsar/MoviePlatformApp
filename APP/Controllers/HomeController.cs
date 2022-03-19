@@ -1,4 +1,5 @@
-﻿using APP.Repository;
+﻿using APP.Models;
+using APP.Repository;
 using APP.Services;
 using System.Web.Mvc;
 
@@ -12,22 +13,25 @@ namespace APP.Controllers
         {
             _movieRepository = Factory.Factory.CreateMovieRepository();           
         }
+        [RequireHttps]
         public ActionResult Index()
         {
             return View(_movieRepository.GetMovies());
         }
 
+        // get
         public ActionResult About()
         {
-            ViewBag.Message = "Your application description page.";
-
             return View();
         }
 
-        public ActionResult Contact()
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult About(AboutViewModel model)
         {
-            ViewBag.Message = "Your contact page.";
 
+            TempData["Message"] = "Message sent";
+            ModelState.Clear();
             return View();
         }
     }

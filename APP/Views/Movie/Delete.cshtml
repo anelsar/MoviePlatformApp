@@ -8,7 +8,7 @@
         <div class="col-md-5 mx-auto">
             <div class="card shadow">
                 <div class="card-body mx-auto">
-                    <h4 class="text-center">Delete role?</h4>
+                    <h4 class="text-center">Delete movie?</h4>
                     <div>
 
                         <hr />
@@ -26,6 +26,7 @@
                             @Html.AntiForgeryToken()
                             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                             @Html.HiddenFor(model => model.Id)
+                            @Html.HiddenFor(model => model.MovieRating)
                             <div class="form-actions no-color">
 
                                 <input type="submit" value="Delete" class="btn btn-default col btn-danger" />

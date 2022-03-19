@@ -1,7 +1,44 @@
-﻿@{
+﻿@model APP.Models.AboutViewModel
+
+@{
     ViewBag.Title = "About";
 }
-<h2>@ViewBag.Title.</h2>
-<h3>@ViewBag.Message</h3>
 
-<p>Use this area to provide additional information.</p>
+
+<div class="container-fluid pt-5">
+    <div class="row">
+        <div class="col-md-5 mx-auto">
+            <div class="card shadow">
+                <div class="card-body mx-auto">
+                    @if(TempData["Message"] != null)
+                        {
+                            <p class="alert alert-success text-center">@TempData["Message"]</p>
+                        }
+                    <h4 class="text-center">About us</h4>
+                    <div>
+                        <p class="text-center"><b>We are a movie streaming platform. You can find all the latest movies on our website, and you can watch them free!</b></p>
+                        <hr />
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            <div class="form-group">
+                                <p class="text-center">You got a question for us? Ask now!</p>
+                                @Html.TextAreaFor(m => m.UserQuestion, new { @class = "form-control col", placeholder = "Write your question here" })
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-offset-2 col-md-12 ">
+                                    <input type="submit" value="Ask" class="btn btn-success col" />
+                                </div>
+                            </div>
+                        }
+                        <div class="mt-2">
+                            @Html.ActionLink("Back to home", "Index")
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

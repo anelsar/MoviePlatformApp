@@ -13,6 +13,7 @@ namespace APP.Models
         public string MovieName { get; set; }
         public string MovieDescription { get; set; }
         public int MovieDuration { get; set; }
+        [Range(1, 10)]
         public double MovieRating { get; set; }
         public string MovieStreamingLink { get; set; }
         public string MovieImagePath { get; set; }

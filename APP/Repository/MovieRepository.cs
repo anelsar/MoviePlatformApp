@@ -22,15 +22,10 @@ namespace APP.Repository
             {
                 var movie = _context.Movies.Find(movieId);
                 _context.Movies.Remove(movie);
-                var deletedMovie = _context.SaveChanges();
+                var deletedMovie = _context.SaveChanges(); 
                 return deletedMovie;
             }
             return 0;
-        }
-
-        public void Dispose()
-        {
-            throw new NotImplementedException();
         }
 
         // get a single movie from database 

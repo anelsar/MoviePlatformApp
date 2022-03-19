@@ -9,7 +9,9 @@
         {
 
             <div class="card col-md-2 bg-dark mt-1">
-                <img class="card-img-top mt-1" alt="List View" height="250vh" width="20rem" src="@Url.Content($"~/Images/{@movie.Movie.MovieImagePath}")">
+                <a href="@Url.Action("Details", "Movie", new { id = movie.Movie.Id })">
+                    <img class="card-img-top mt-1" alt="List View" height="250vh" src="@Url.Content($"~/Images/{@movie.Movie.MovieImagePath}")">
+                </a>
                 <div class="card-body">
                     <div class="row">
                         <div class="col">

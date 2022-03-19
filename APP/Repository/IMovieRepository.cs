@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace APP.Repository
 {
-    public interface IMovieRepository : IDisposable
+    public interface IMovieRepository 
     {
         IEnumerable<Movie> GetMovies();
         Movie GetMovieById(string movieId);

@@ -6,17 +6,22 @@ using System.Threading.Tasks;
 using System.Web;
 using Microsoft.AspNet.Identity.Owin;
 using System;
+using System.Net;
+using System.Net.Http;
+using APP.Services;
+using System.Collections.Generic;
+using System.IO;
 
 namespace APP.Controllers
 {
     [Services.Authorize]
     public class MovieController : Controller
     {
-        private  IMovieRepository _moviesRepo;
-        private  IUserMovieRepository _userMovieRepo;
+        private readonly IMovieRepository _moviesRepo;
+        private  readonly IUserMovieRepository _userMovieRepo;
         private Movie _movie;
-        private  IFile _imageFile;
-        private  IProcessFile _processFile;
+        private  readonly IFile _imageFile;
+        private  readonly IProcessFile _processFile;
         private  UserMovie _userMovie;
         private ApplicationUserManager _userManager;
 
@@ -50,23 +55,35 @@ namespace APP.Controllers
                 _userManager = value;
             }
         }
-        [Services.Authorize(Roles = "Admin")]
+
+        [Services.Authorize(Roles = "Admin, Global administrator")]
         public ActionResult Index()
         {
+            if(TempData["Added"] != null)
+            {
+                TempData["Success"] = "Added Successfully!";
+            }
             var allMovies = _moviesRepo.GetMovies(); // getting all movies from database
             return View("Index", allMovies); // sending the list of movies to view
         }
-        [Services.Authorize(Roles = "Admin")]
+
+        [Services.Authorize(Roles = "Admin, Global administrator")]
         // create movie view
         public ActionResult Create()
         {
             return View();
         }
-        [Services.Authorize(Roles = "Admin")]
+
+        [Services.Authorize(Roles = "Admin, Global administrator")]
         // creating a new movie
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public ActionResult Create(CreateMovieModel movieModel)
         {
+            if(!ModelState.IsValid)
+            {
+                return View(movieModel);
+            }
             if(ModelState.IsValid)
             {
                 // assigning values to new movie
@@ -78,65 +95,72 @@ namespace APP.Controllers
                 _movie.MovieImagePath = movieModel.PostedFile.FileName; 
                 _movie.MovieRating = movieModel.Rating;
                 _movie.MovieStreamingLink = movieModel.StreamingLink;
-
+                
+                if (_processFile.IsValidSignature(System.IO.Path.GetExtension(movieModel.PostedFile.FileName).Substring(1), movieModel.PostedFile.InputStream))
+                {
+                    var fileNameAndExtension = _processFile.GetSafeFileName(movieModel.PostedFile);
+                    _imageFile.FileName = _processFile.HtmlEncodeFileName(fileNameAndExtension.Item1) + "." + _processFile.HtmlEncodeFileName(fileNameAndExtension.Item2);
+                    _imageFile.PsyhicalPath = _processFile.SetPsyhicalPath(movieModel.PostedFile, _imageFile.FileName); // sets the psyhical path of the image
+                    movieModel.PostedFile.SaveAs(_imageFile.PsyhicalPath); // saves image in Images directory
+                    _movie.MovieImagePath = _imageFile.FileName;
+                }
                 // processing the uploaded image
-                _imageFile.FileName = _processFile.GetFileName(movieModel.PostedFile); // gets the name of the image
-                _imageFile.PsyhicalPath = _processFile.SetPsyhicalPath(movieModel.PostedFile, _imageFile.FileName); // sets the psyhical path of the image
-                movieModel.PostedFile.SaveAs(_imageFile.PsyhicalPath); // saves image in Images directory
+                
                 var inserted = _moviesRepo.InsertMovie(_movie); // inserting movie into database
                 if(inserted == 0) // if the movie was successfully added to the DB, this number will be 1
                 {
-                    ViewBag.errorMessage = "Problem with adding the movie to database";
-                    return View("../Shared/Error");
+                    return RedirectToAction("MovieError", "Error");
                 }
-                TempData["Success"] = "Added Successfully!"; // successfully added
+                //string added = "Added successfully";
+                TempData["Added"] = "Added Successfully!"; // successfully added
             }
            
-            return RedirectToAction("Index", "Movie"); // redirect to view
+            return RedirectToAction("Index"); // redirect to action
         }
 
-        [Services.Authorize(Roles = "Admin")]
+        
+        [Services.Authorize(Roles = "Admin, Global administrator")]
         // edit movie view
         public ActionResult Edit(string id)
         {
             if(id != null)
             {
                 _movie = _moviesRepo.GetMovieById(id); // gets a movie by id
+               // var status = new HttpResponseMessage(HttpStatusCode.NotFound);
                 if(_movie == null)
                 {
-                    ViewBag.errorMessage = "No movie with that ID";
-                    return View("../Shared/Error");
+                    
+                    return RedirectToAction("MovieError", "Error");
                 }
                 return View(_movie);
             }
             else
             {
-                ViewBag.errorMessage = "Movie ID not found";
-                return View("../Shared/Error");
+                return RedirectToAction("MovieError", "Error");
             }
         }
 
-        [Services.Authorize(Roles = "Admin")]
+        
+        [Services.Authorize(Roles = "Admin, Global administrator")]
         // editing movie information
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Edit(Movie movie)
         {
-            if(movie == null)
+            if(!ModelState.IsValid)
             {
-                ViewBag.errorMessage = "No movie object provided for editing";
-                return View("../Shared/Error");
+                return View(movie);
             }
             var updatedMovie = _moviesRepo.UpdateMovie(movie); // updates the movie, if everyting OK, updatedMovie = 1
             if(updatedMovie == 0) // error while editing the movie
             {
-                ViewBag.errorMessage = "Something went wrong while updating the movie information";
-                return View("../Shared/Error");
+                return RedirectToAction("MovieError", "Error");
             }
             TempData["Success"] = "Updated successfully"; // everything OK message
             return RedirectToAction("Index");
         }
 
-        [Services.Authorize(Roles = "Admin")]
+        [Services.Authorize(Roles = "Admin, Global administrator")]
         // delete movie view
         public ActionResult Delete(string id)
         {
@@ -145,32 +169,46 @@ namespace APP.Controllers
                 _movie = _moviesRepo.GetMovieById(id); // getting the movie object to delete 
                 if(_movie == null) // if no movie was found, show error message
                 {
-                    ViewBag.errorMessage = "No movie with this ID";
-                    return View("../Shared/Error");
+                    return RedirectToAction("MovieError", "Error");
                 }
                 return View(_movie); // show the movie on the view
             }
 
-            ViewBag.errorMessage = "Movie ID not found";
-            return View("../Shared/Error");
+            return RedirectToAction("MovieError", "Error");
         }
 
         //deleting a movie
-        [Services.Authorize(Roles = "Admin")]
+        [Services.Authorize(Roles = "Admin, Global administrator")]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Delete(Movie movie)
         {
-            if(movie == null) // if a movie object was not passed to the method
+            if(!ModelState.IsValid) // if a movie object was not passed to the method
             {
-                ViewBag.errorMessage = "Problem with providing a movie to delete";
-                return View("../Shared/Error");
+                return RedirectToAction("MovieError", "Error");
             }
+
+            // getting all users with a favourite movie with this movie id
+            var getAllUserMovieRecordsWithThisMovieId = _userMovieRepo.GetAllUsersWithTheSameMovie(movie.Id);
+
+            if(getAllUserMovieRecordsWithThisMovieId != null)
+            {
+                List<int> deletedUserMovieRecords = new List<int>();
+                // deleting those records from the UserMovies table
+                foreach(var userMovieRecord in getAllUserMovieRecordsWithThisMovieId)
+                {
+                  _userMovieRepo.DeleteMovie(userMovieRecord.Id); // deleting all records from the userMovie table with this movie id
+                                                                     // before deleting the movie from the movie table
+                }
+            }
+            // when the records in the usermovie table are deleted, then delete the movie
             var deletedMovie = _moviesRepo.DeleteMovie(movie.Id); // if the movie was successfully deleted, deletedMovie will be equal to 1
+
             if(deletedMovie == 0) // movie wasn't successfully deleted, show error
             {
-                ViewBag.errorMessage = "Problem while deleting the movie, movie wasn't deleted";
-                return View("../Shared/Error");
+                return RedirectToAction("MovieError", "Error");
             }
+            TempData["Success"] = "Successfully deleted";
             return RedirectToAction("Index");
         }
 
@@ -183,14 +221,13 @@ namespace APP.Controllers
                 return View(_movie);
 
             // if no movie with the id was found, show error 
-            ViewBag.errorMessage = "No movie with that ID";
-            return View("../Shared/Error");
-                    
+            return RedirectToAction("MovieError", "Error");
+
         }
 
         // gets called after the add to favourite button on details view
         [HttpPost]
-
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> Details(string movieId, string userName)
         {           
             if(movieId != null && userName != null) // checking if we have the required parameters
@@ -199,8 +236,7 @@ namespace APP.Controllers
 
                 if (user == null) // checking if the user exists
                 {
-                    ViewBag.errorMessage = "No user with that ID";  // user doesn't exist
-                    return View("../Shared/Error"); // show the error view
+                    return RedirectToAction("MovieError", "Error");
                 }
 
                 if (_userMovieRepo.CheckIfAlreadyFavoruite(movieId, user.Id)) // checking if the movie is already added to favourites
@@ -209,15 +245,14 @@ namespace APP.Controllers
                     return RedirectToAction("Details");
                 }
 
-                else // if movies isn't in favourites, add it
+                else // if movie isn't in favourites, add it
                 {
                     _userMovie.MovieId = movieId;
                     _userMovie.UserId = user.Id;
                     var addedMovie =  _userMovieRepo.AddNewFavouriteMovie(_userMovie);
                     if(addedMovie == 0) // if movie was successfully added to the database, this number will be equal to 1
                     {
-                        ViewBag.errorMessage = "Some problem occured while adding the movie to the database";  // movie wasn't added to usermovies db
-                        return View("../Shared/Error");
+                        return RedirectToAction("MovieError", "Error");
                     }
                 }
                 TempData["Success"] = "Movie added to favourites"; // movie successfully added message
@@ -225,8 +260,7 @@ namespace APP.Controllers
             }
                
             else
-                ViewBag.errorMessage = "Not a valid movie id or user name"; // no valid id's were provided, show error 
-            return View("../Shared/Error");
+                return RedirectToAction("MovieError", "Error");
 
         }
 
@@ -238,13 +272,13 @@ namespace APP.Controllers
                 var userMovies = _userMovieRepo.GetAllUsersMovies(id); 
                 return View(userMovies);
             }
-            ViewBag.errorMessage = "Not a valid user id"; // if no id was provided show error
-            return View("../Shared/Error");
+            return RedirectToAction("MovieError", "Error");
         }
 
         
         // Deletes selected movie from favourites
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult DeleteFavouriteMovie(string id)
         {
             if(id != null) 
@@ -252,14 +286,14 @@ namespace APP.Controllers
                 var deletedUserMovie = _userMovieRepo.DeleteMovie(id); // if movie was successfully deleted this value will be equal to 1
                 if(deletedUserMovie == 0) // something went wrong with deleting the movie
                 {
-                    ViewBag.errorMessage = "Something went wrong while deleting the selected favourite movie"; // show error message
-                    return View("../Shared/Error");
+                    return RedirectToAction("MovieError", "Error");
                 }
                 TempData["Success"] = "Movie successfully deleted from favourites"; // movie was successfully deleted from favs
                 return RedirectToAction("Index", "Home");
             }
-            ViewBag.errorMessage = "Not a valid movie id for"; // if no id was provided show error
-            return View("../Shared/Error");
+            return RedirectToAction("MovieError", "Error");
         }
+
     }
+
 }

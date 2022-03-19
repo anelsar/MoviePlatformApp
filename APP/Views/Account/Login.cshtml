@@ -1,4 +1,5 @@
 ﻿@using APP.Models
+@using Recaptcha.Web.Mvc;
 @model LoginViewModel
 @{
     ViewBag.Title = "Log in";
@@ -12,53 +13,78 @@
                     <div class="row">
                         <div class="col">
                             <h2 class="text-danger">@Html.ValidationMessage("")</h2>
-                        </div>                        
+                        </div>
                     </div>
-                    <section id="loginForm">
-                        @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    @if(ViewBag.errorMessage != null)
+                        {
+                            <p class="text-danger">@ViewBag.errorMessage</p>
+                        }
+                    @if (TempData["ShowCaptcha"] != null)
+                    {
+
+                        using (Html.BeginForm("VerifyCaptcha", "Account"))
                         {
                             @Html.AntiForgeryToken()
-                            <h4 class="text-center">User log in</h4>
-                            <hr />
-                            
-                    <div class="form-group">
-                        
-                        <div class="col-md-12">
-                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control col", placeholder = "Email address" })
-                            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger small" })
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        
-                        <div class="col-md-12">
-                            @Html.PasswordFor(m => m.Password, new { @class = "form-control col", placeholder = "Password" })
-                            @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger small" })
-                        </div>
-                    </div>
+                            @Html.RecaptchaWidget()
+                            @Html.HiddenFor(m => m.Email)
+                            @Html.HiddenFor(m => m.Password)
+                            @Html.HiddenFor(m => m.RememberMe)
                             <div class="form-group">
                                 <div class="col-md-offset-2 col-md-12">
-                                    <div class="checkbox">
-                                        @Html.CheckBoxFor(m => m.RememberMe)
-                                        @Html.LabelFor(m => m.RememberMe)
+                                    <input type="submit" value="Proceed" class="btn btn-default col btn-success" />
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <section id="loginForm">
+                            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <h4 class="text-center">User log in</h4>
+                                <hr />
+
+                                <div class="form-group">
+
+                                    <div class="col-md-12">
+                                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control col", placeholder = "Email address" })
+                                        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger small" })
                                     </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-offset-2 col-md-12">
-                                    <input type="submit" value="Log in" class="btn btn-default col btn-success" />
+                                <div class="form-group">
+
+                                    <div class="col-md-12">
+                                        @Html.PasswordFor(m => m.Password, new { @class = "form-control col", placeholder = "Password" })
+                                        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger small" })
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-md-offset-2 col-md-12">
+                                <div class="form-group">
+                                    <div class="col-md-offset-2 col-md-12">
+                                        <div class="checkbox">
+                                            @Html.CheckBoxFor(m => m.RememberMe)
+                                            @Html.LabelFor(m => m.RememberMe)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-offset-2 col-md-12">
+                                        <input type="submit" value="Log in" class="btn btn-default col btn-success" />
+                                    </div>
+                                </div>
+                                <div class="col-md-offset-2 col-md-12">
+                                    <p>
+                                        @Html.ActionLink("Register as a new user", "Register")
+                                    </p>
+                                </div>
+                                //Enable this once you have account confirmation enabled for password reset functionality
                                 <p>
-                                    @Html.ActionLink("Register as a new user", "Register")
+                                    @Html.ActionLink("Forgot your password?", "ForgotPassword")
                                 </p>
-                            </div>
-                             //Enable this once you have account confirmation enabled for password reset functionality
-                            <p>
-                                @Html.ActionLink("Forgot your password?", "ForgotPassword")
-                            </p>
-                        }
-                    </section>
+                            }
+                        </section>
+                    }
+
                 </div>
                 @*
         <div class="col-md-4">

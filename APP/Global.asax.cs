@@ -18,5 +18,6 @@ namespace APP
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             
         }
+      
     }
 }

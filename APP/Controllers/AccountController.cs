@@ -6,6 +6,9 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using APP.Models;
+using Recaptcha.Web.Mvc;
+using Recaptcha.Web;
+using System;
 
 namespace APP.Controllers
 {
@@ -59,6 +62,35 @@ namespace APP.Controllers
         }
 
         //
+
+        // Captcha verifying 
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> VerifyCaptcha(LoginViewModel model, string returnUrl)
+        {
+            RecaptchaVerificationHelper recaptchaHelper = this.GetRecaptchaVerificationHelper();
+            if (String.IsNullOrEmpty(recaptchaHelper.Response))
+            {
+                ModelState.AddModelError("", "Captcha answer cannot be empty.");
+                TempData["ShowCaptcha"] = true;
+                return View("Login");
+            }
+            RecaptchaVerificationResult recaptchaResult = recaptchaHelper.VerifyRecaptchaResponse();
+            if (!recaptchaResult.Success)
+            {
+                ModelState.AddModelError("", "Incorrect captcha answer.");
+                TempData["ShowCaptcha"] = true;
+                return View("Login");
+            }
+            var user = await UserManager.FindByEmailAsync(model.Email);
+            var resetFailedCount = await UserManager.ResetAccessFailedCountAsync(user.Id);
+         
+            return View("Login");
+        }
+
+         
+
         // POST: /Account/Login
         [HttpPost]
         [AllowAnonymous]
@@ -71,16 +103,28 @@ namespace APP.Controllers
                 return View(model);
             }
 
+            
+
+
             var user = await UserManager.FindByEmailAsync(model.Email);
             if(user != null)
             {
                 if (!await UserManager.IsEmailConfirmedAsync(user.Id))
                 {
-                    ViewBag.errorMessage = "You must have a confirmed email to log on.";
-                    return View("Error");
+                    ModelState.AddModelError("", "Invalid login attempt.");
+                    // ovdje moram send email confirmation link odraditi
+                    string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                    var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                    await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking on this link " + callbackUrl + "");
+                    return View(model);
+                }
+                if(user.AccessFailedCount == 1)
+                {
+                    TempData["ShowCaptcha"] = true;
+                    return View(model);
                 }
             }
-
+            
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
             var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
@@ -95,6 +139,14 @@ namespace APP.Controllers
                 case SignInStatus.Failure:
                 default:
                     ModelState.AddModelError("", "Invalid login attempt.");
+                    if(user != null)
+                    {
+                        var increment = await UserManager.AccessFailedAsync(user.Id);
+                    }                 
+                    if (user != null && user.AccessFailedCount == 2)
+                    {
+                        TempData["ShowCaptcha"] = true;
+                    }
                     return View(model);
             }
         }
